@@ -73,17 +73,18 @@ DrTune/March 2017
 
 import time
 
-import BananaPiI2CPort  #<<< you won't have this (is a custom class for my hacked kernel) - use SMBus instead! I will do this when I have a sec but it should be easy
-#import smbus  #<<You want to use this - convert the i2c.read and i2c.write to match
+# import BananaPiI2CPort  #<<< you won't have this (is a custom class for my hacked kernel) - use SMBus instead! I will do this when I have a sec but it should be easy
+import smbus  #<<You want to use this - convert the i2c.read and i2c.write to match
 
 
 class PowerSupply(object):
     def __init__(self,address):  #address 0..7 reflecting the i2c address select bits on the PSU edge connector
-        self.i2c = BananaPiI2CPort.BananaPiI2CPort()    # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
-        self.address=0x58
-        self.EEaddress=0x50+address
+        self.i2c = smbus(1)    # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
+        # self.i2c = BananaPiI2CPort.BananaPiI2CPort()    # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
+        self.address=0x57
+        self.EEaddress=0x5F+address
 
-        self.numReg=0x58/2
+        self.numReg=0x57/2
         self.lastReg=[0 for n in range(self.numReg)]
         self.minReg=[0xffff for n in range(self.numReg)]
         self.maxReg=[0 for n in range(self.numReg)]
